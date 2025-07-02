@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Adicionar Produto</title>
+  <link rel="shortcut icon" href="image/favicon/personalizai.ico" type="image/x-icon">
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 1rem; }
+    form { display: grid; gap: 0.5rem; }
+    input, button { padding: 0.5rem; }
+  </style>
+</head>
+<body>
+
+<h1>Adicionar Produto</h1>
+<a href="index.html">← Voltar</a>
+
+<form id="form-produto">
+  <input type="text" placeholder="Categoria" id="categoria" required />
+  <input type="text" placeholder="Nome" id="nome" required />
+  <input type="text" placeholder="Código" id="codigo" required />
+  <input type="text" placeholder="Fornecedor" id="fornecedor" />
+  <input type="text" placeholder="Imagem" id="imagem" />
+  <input type="number" step="0.01" placeholder="Custo Produto" id="custo_produto" required />
+  <input type="number" step="0.01" placeholder="DTF" id="dtf" />
+  <input type="number" step="0.01" placeholder="Aplic DTF" id="aplic_dtf" />
+  <input type="number" step="0.01" placeholder="Arte" id="arte" />
+  <input type="number" step="0.01" placeholder="Frete" id="frete" />
+  <input type="number" step="0.01" placeholder="Embalagem" id="embalagem" />
+  <input type="text" placeholder="Descrição" id="descricao" />
+  <input type="text" placeholder="Mensagem WhatsApp" id="whatsapp_mensagem" />
+
+  <button type="submit">Salvar</button>
+</form>
+
+<script>
+  const form = document.getElementById('form-produto');
+
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+
+    const produto = {
+      categoria: form.categoria.value,
+      nome: form.nome.value,
+      codigo: form.codigo.value,
+      fornecedor: form.fornecedor.value,
+      imagem: form.imagem.value,
+      custos: {
+        custo_produto: parseFloat(form.custo_produto.value),
+        dtf: parseFloat(form.dtf.value || 0),
+        aplic_dtf: parseFloat(form.aplic_dtf.value || 0),
+        arte: parseFloat(form.arte.value || 0),
+        frete: parseFloat(form.frete.value || 0),
+        embalagem: parseFloat(form.embalagem.value || 0),
+      },
+      descricao: form.descricao.value,
+      whatsapp_mensagem: form.whatsapp_mensagem.value
+    };
+
+    await fetch('/api/produtos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(produto)
+    });
+
+    alert('Produto adicionado!');
+    location.href = 'index.html';
+  };
+</script>
+
+</body>
+</html>

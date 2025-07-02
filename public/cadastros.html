@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Produtos</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 1rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; }
+    .actions button { margin-right: 0.5rem; }
+  </style>
+</head>
+<body>
+
+<h1>Produtos Cadastrados</h1>
+<a href="adicionar.html"><button>Adicionar Novo Produto</button></a>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Código</th>
+      <th>Categoria</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody id="produtos-tbody"></tbody>
+</table>
+
+<script>
+  async function carregarProdutos() {
+    const res = await fetch('/api/produtos');
+    const produtos = await res.json();
+    const tbody = document.getElementById('produtos-tbody');
+    tbody.innerHTML = '';
+
+    produtos.forEach((produto, index) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${produto.nome}</td>
+        <td>${produto.codigo}</td>
+        <td>${produto.categoria}</td>
+        <td class="actions">
+          <a href="editar.html?index=${index}"><button>Editar</button></a>
+          <button onclick="deletar(${index})" style="color:red;">Deletar</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function deletar(index) {
+    if (confirm('Deseja excluir este produto?')) {
+      await fetch(`/api/produtos/${index}`, { method: 'DELETE' });
+      carregarProdutos();
+    }
+  }
+
+  carregarProdutos();
+</script>
+
+</body>
+</html>

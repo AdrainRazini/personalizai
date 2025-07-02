@@ -1,0 +1,19 @@
+[
+  {
+    "categoria": "SACOLAS",
+    "nome": "Sacola Personalizada XBZ",
+    "codigo": "13780",
+    "fornecedor": "XBZ",
+    "imagem": "13780.png",
+    "custos": {
+      "custo_produto": 1.7,
+      "dtf": 1,
+      "aplic_dtf": 0,
+      "arte": 0,
+      "frete": 0,
+      "embalagem": 0.05
+    },
+    "descricao": "Sacola personalizada conforme tabela de custos e margem de lucro variável por quantidade.",
+    "whatsapp_mensagem": "Olá, gostaria de mais informações sobre a Sacola Personalizada código 13780."
+  }
+]

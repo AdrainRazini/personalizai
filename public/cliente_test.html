@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Catálogo de Produtos</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 900px;
+      margin: auto;
+      padding: 1rem;
+    }
+    h1 {
+      text-align: center;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    }
+    .card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .card button {
+      margin-top: 0.5rem;
+      background: #25D366;
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .card button:hover {
+      background: #1ebe5d;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Catálogo de Produtos</h1>
+<div class="grid" id="produtos-container"></div>
+
+<script>
+  async function carregarProdutos() {
+    const res = await fetch('/api/produtos');
+    const produtos = await res.json();
+    const container = document.getElementById('produtos-container');
+
+    produtos.forEach(produto => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      card.innerHTML = `
+        <h3>${produto.nome}</h3>
+        <p><strong>Código:</strong> ${produto.codigo}</p>
+        <p><strong>Categoria:</strong> ${produto.categoria}</p>
+        <p><strong>Fornecedor:</strong> ${produto.fornecedor}</p>
+        ${produto.imagem ? `<img src="${produto.imagem}" alt="${produto.nome}">` : ''}
+        <button onclick="contato('${encodeURIComponent(produto.whatsapp_mensagem)}')">Entrar em Contato</button>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function contato(mensagem) {
+    const numero = '5599999999999'; // Substitua com o número da sua empresa
+    const url = `https://wa.me/${numero}?text=${mensagem}`;
+    window.open(url, '_blank');
+  }
+
+  carregarProdutos();
+</script>
+
+</body>
+</html>

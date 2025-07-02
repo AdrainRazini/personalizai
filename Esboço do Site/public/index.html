@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Expansão Bolsas & Mochilas</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ <link rel="stylesheet" href="css/style.css">
+ <link rel="stylesheet" href="js/script.js">
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    Faça seu orçamento em instantes! Clique no botão de WhatsApp e fale conosco
+  </div>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <i class="fas fa-bars"></i>
+  </div>
+
+  <nav class="nav-links" id="navMenu">
+    <div class="close-container">
+      <a href="#" class="close-menu" onclick="toggleMenu()">
+        <i class="fas fa-times"></i>
+      </a>
+    </div>
+    <a href="#">★ Destaques</a>
+    <a href="#">Home</a>
+    <a href="#">Loja</a>
+    <a href="#">Sobre</a>
+    <a href="#">Contato</a>
+    <a href="#"><i class="fas fa-shopping-cart"></i> 0 item</a>
+  </nav>
+</header>
+
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('navMenu');
+    menu.classList.toggle('active');
+    const menuToggle = document.querySelector('.menu-toggle');
+    menuToggle.classList.toggle('open');
+  }
+</script>
+
+
+
+
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="container">
+    <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h3>CATEGORIAS</h3>
+<div class="elementor-widget-container">
+  <ul class="elementor-icon-list-items">
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/bolsas-malas.html">
+        <span class="elementor-icon-list-icon"><i class="fas fa-luggage-cart"></i></span>
+        <span class="elementor-icon-list-text">BOLSAS / MALAS</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/brindes-femininos.html">
+        <span class="elementor-icon-list-icon"><i class="fas fa-gift"></i></span>
+        <span class="elementor-icon-list-text">BRINDES FEMININOS</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/brindes-masculinos.html">
+        <span class="elementor-icon-list-icon"><i class="fas fa-gifts"></i></span>
+        <span class="elementor-icon-list-text">BRINDES MASCULINOS</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/canecas.html">
+        <span class="elementor-icon-list-icon"><i class="fas fa-mug-hot"></i></span>
+        <span class="elementor-icon-list-text">CANECAS</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/diversos.html">
+        <span class="elementor-icon-list-icon"><i class="fab fa-codiepie"></i></span>
+        <span class="elementor-icon-list-text">DIVERSOS</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/eco-bags.html">
+        <span class="elementor-icon-list-icon"><i class="fas fa-leaf"></i></span>
+        <span class="elementor-icon-list-text">ECO BAG / SACOLAS</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/eletronicos.html">
+        <span class="elementor-icon-list-icon"><i class="fas fa-headphones"></i></span>
+        <span class="elementor-icon-list-text">ELETRÔNICOS</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/garrafas.html">
+        <span class="elementor-icon-list-icon"><i class="fas fa-glass-whiskey"></i></span>
+        <span class="elementor-icon-list-text">GARRAFAS / SQUEEZE</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/necessaire.html">
+        <span class="elementor-icon-list-icon"><i class="far fa-window-maximize"></i></span>
+        <span class="elementor-icon-list-text">NECESSAIRE</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/kits.html">
+        <span class="elementor-icon-list-icon"><i class="fab fa-flipboard"></i></span>
+        <span class="elementor-icon-list-text">KITS</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/mochilas.html">
+        <span class="elementor-icon-list-icon"><i class="fas fa-suitcase-rolling"></i></span>
+        <span class="elementor-icon-list-text">MOCHILAS</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/pastas.html">
+        <span class="elementor-icon-list-icon"><i class="fas fa-folder"></i></span>
+        <span class="elementor-icon-list-text">PASTAS</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/porta-vinhos.html">
+        <span class="elementor-icon-list-icon"><i class="fas fa-wine-bottle"></i></span>
+        <span class="elementor-icon-list-text">PORTA VINHOS</span>
+      </span>
+    </li>
+    <li class="elementor-icon-list-item">
+      <span class="elementor-icon-list-link" data-href="categorias/termicas.html">
+        <span class="elementor-icon-list-icon"><i class="fas fa-shopping-bag"></i></span>
+        <span class="elementor-icon-list-text">TÉRMICAS</span>
+      </span>
+    </li>
+  </ul>
+</div>
+
+<script>
+  document.querySelectorAll('.elementor-icon-list-link').forEach(item => {
+    item.addEventListener('click', () => {
+      const url = item.getAttribute('data-href');
+
+      fetch(url, { method: 'HEAD' })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = url;
+          } else {
+            window.location.href = 'test.html';
+          }
+        })
+        .catch(() => {
+          window.location.href = 'test.html';
+        });
+    });
+  });
+</script>
+
+  </aside>
+     
+
+
+   
+    <main class="content">
+
+    <section class="banner">
+  <div class="carousel-container">
+    <div class="carousel-track" id="carouselTrack">
+      <img src="img/image1.png" class="carousel-image" />
+      <img src="img/image2.png" class="carousel-image" />
+      <img src="img/image3.png" class="carousel-image" />
+    </div>
+    <button class="button-left" onclick="changeSlide(-1)">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="button-right" onclick="changeSlide(1)">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</section>
+
+
+
+
+<script>
+  let currentSlide = 0;
+  const track = document.getElementById('carouselTrack');
+  const totalSlides = track.children.length;
+
+  function changeSlide(direction) {
+    currentSlide += direction;
+    if (currentSlide < 0) {
+      currentSlide = totalSlides - 1;
+    } else if (currentSlide >= totalSlides) {
+      currentSlide = 0;
+    }
+
+    const newTransform = -currentSlide * 100;
+    track.style.transform = `translateX(${newTransform}%)`;
+  }
+</script>
+
+
+
+
+
+      <!-- DIFERENCIAIS -->
+      <section class="diferenciais">
+        <div>
+          <i class="fas fa-truck"></i>
+          <h4>ENTREGA ÁGIL</h4>
+          <p>Seu pedido será entregue com agilidade onde quer que esteja.</p>
+        </div>
+        <div>
+          <i class="fas fa-clock"></i>
+          <h4>EM ATÉ 24H</h4>
+          <p>Seu orçamento será enviado por whatsapp ou e-mail em poucas horas.</p>
+        </div>
+        <div>
+          <i class="fas fa-tags"></i>
+          <h4>ÓTIMOS PREÇOS</h4>
+          <p>Ótimos preços e qualidade garantida.</p>
+        </div>
+      </section>
+
+      <!-- GALERIA DE PRODUTOS -->
+      <section class="produtos">
+        <h2>TODOS OS PRODUTOS</h2>
+        <div class="grid-produtos">
+          <!-- Exemplo de card de produto -->
+          <div class="produto">
+            <img src="prod1.jpg" alt="Produto 1">
+            <h3>Brinde 1</h3>
+            <p><strong>R$ 85,17</strong></p>
+            <a href="https://wa.me/554196638056" class="btn-produto" target="_blank">
+              Orçamento via WhatsApp
+            </a>
+          </div>
+          <!-- Repita .produto para cada item -->
+          <div class="produto">
+            <img src="prod2.jpg" alt="Produto 2">
+            <h3>Brinde 2</h3>
+            <p><strong>R$ 45,62</strong></p>
+            <a href="https://wa.me/554196638056" class="btn-produto" target="_blank">
+              Orçamento via WhatsApp
+            </a>
+          </div>
+          <div class="produto">
+            <img src="prod3.jpg" alt="Produto 3">
+            <h3>Brinde 3</h3>
+            <p><strong>R$ 40,54</strong></p>
+            <a href="https://wa.me/554196638056" class="btn-produto" target="_blank">
+              Orçamento via WhatsApp
+            </a>
+          </div>
+          <div class="produto">
+            <img src="prod4.jpg" alt="Produto 4">
+            <h3>Brinde 4</h3>
+            <p><strong>R$ 210,97</strong></p>
+            <a href="https://wa.me/554196638056" class="btn-produto" target="_blank">
+              Orçamento via WhatsApp
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA SECUNDÁRIA -->
+      <section class="cta-secundaria">
+        <div class="texto">
+          <h2>Mochilas com sua logo é aqui na Expansão!</h2>
+          <p>Nos chame no WhatsApp agora mesmo e solicite seu orçamento.</p>
+          <a href="https://wa.me/554196638056" class="btn-cta" target="_blank">
+            Solicitar Orçamento
+          </a>
+        </div>
+        <img src="mochila-modelo.jpg" alt="Pessoa de costas com mochila">
+      </section>
+
+      <!-- SEÇÃO DE CLIENTES -->
+      <section class="clientes">
+        <h2>Grandes empresas que já compraram conosco</h2>
+        <div class="logos">
+          <img src="logo-estapar.png" alt="Estapar">
+          <img src="logo-pelanda.png" alt="Pelanda">
+          <img src="logo-positivo.png" alt="Positivo">
+          <img src="logo-beba-cini.png" alt="Beba Cini">
+          <!-- adicione mais logos conforme necessário -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <div class="about">
+      <img src="logo-footer.png" alt="Logo Expansão" height="50">
+      <p>Expansão Bolsas & Mochilas<br>Somos especialistas em fortalecer a sua marca!</p>
+    </div>
+    <nav>
+      <a href="#">Termos & Privacidade</a>
+    </nav>
+  </footer>
+  <div class="madeby">Desenvolvido por -- Adrian Razini -- </div>
+ 
+  <!-- WHATSAPP FIXO -->
+  <a href="https://wa.me/554196638056" target="_blank" class="whatsapp-btn">
+    <i class="fab fa-whatsapp"></i> Orçamento Rápido
+  </a>
+<script type="module" src="js/script.js"></script>
+</body>
+</html>

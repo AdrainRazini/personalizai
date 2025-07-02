@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Em Desenvolvimento</title>
+  <style>
+    /* Reset básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #1a1a1a, #2c3e50);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .text {
+      font-size: 2.5rem;
+      color: #ec6b1b;
+      font-weight: bold;
+      letter-spacing: 2px;
+      animation: pulse 1.5s infinite alternate, fadeIn 2s ease-in-out;
+    }
+
+    @keyframes pulse {
+      from {
+        transform: scale(1);
+        text-shadow: 0 0 5px #ec6b1b, 0 0 10px #ec6b1b44;
+      }
+      to {
+        transform: scale(1.05);
+        text-shadow: 0 0 10px #ec6b1b, 0 0 20px #ec6b1b88;
+      }
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="text">Em Desenvolvimento...</div>
+</body>
+</html>
