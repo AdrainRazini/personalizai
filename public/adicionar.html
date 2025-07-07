@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Adicionar Produto</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 1rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #999;
+    }
+
+    #aviso {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    #aviso.sucesso {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    #aviso.erro {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+  <h1>Novo Produto</h1>
+  <form id="produto-form">
+    <input type="text" id="nome" placeholder="Nome" required><br>
+    <input type="text" id="codigo" placeholder="Código" required><br>
+    <input type="text" id="categoria" placeholder="Categoria" required><br>
+    <input type="text" id="fornecedor" placeholder="Fornecedor"><br>
+    <input type="text" id="imagem" placeholder="Nome da imagem (ex: 13780.png)"><br>
+    <textarea id="descricao" placeholder="Descrição"></textarea><br>
+    <textarea id="whatsapp_mensagem" placeholder="Mensagem WhatsApp"></textarea><br>
+
+    <h3>Custos:</h3>
+    <input type="number" id="custo_produto" placeholder="Custo do Produto" step="0.01" min="0"><br>
+    <input type="number" id="dtf" placeholder="DTF" step="0.01" min="0"><br>
+    <input type="number" id="aplic_dtf" placeholder="Aplicação DTF" step="0.01" min="0"><br>
+    <input type="number" id="arte" placeholder="Arte" step="0.01" min="0"><br>
+    <input type="number" id="frete" placeholder="Frete" step="0.01" min="0"><br>
+    <input type="number" id="embalagem" placeholder="Embalagem" step="0.01" min="0"><br>
+
+    <strong>Total:</strong>
+    <input type="text" id="custo_total" placeholder="Total" readonly><br>
+
+    <button type="submit">Salvar</button>
+  </form>
+
+  <div id="aviso"></div>
+  <a href="index.html">← Voltar</a>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRrvG3NIL_SdUIRTslSOzKG-B9lmH8LaA",
+      authDomain: "personalizai-login-data.firebaseapp.com",
+      projectId: "personalizai-login-data",
+      storageBucket: "personalizai-login-data.appspot.com",
+      messagingSenderId: "1044986495943",
+      appId: "1:1044986495943:web:21db46ad8b5a8694700fe2",
+      measurementId: "G-FKL4MNFS4E"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById("produto-form");
+    const aviso = document.getElementById("aviso");
+
+    const camposCusto = [
+      "custo_produto",
+      "dtf",
+      "aplic_dtf",
+      "arte",
+      "frete",
+      "embalagem"
+    ];
+
+    function atualizarCustoTotal() {
+      let total = 0;
+      camposCusto.forEach(id => {
+        const valor = parseFloat(document.getElementById(id).value.replace(",", ".")) || 0;
+        total += valor;
+      });
+      document.getElementById("custo_total").value = total.toFixed(2).replace(".", ",");
+    }
+
+    camposCusto.forEach(id => {
+      document.getElementById(id).addEventListener("input", atualizarCustoTotal);
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      form.querySelector('button[type="submit"]').disabled = true;
+      aviso.style.display = "none";
+      aviso.textContent = "";
+      aviso.className = "";
+
+      try {
+        const nome = document.getElementById("nome").value;
+        const codigo = document.getElementById("codigo").value;
+        const categoria = document.getElementById("categoria").value;
+
+        const custos = {
+          custo_produto: parseFloat(document.getElementById("custo_produto").value) || 0,
+          dtf: parseFloat(document.getElementById("dtf").value) || 0,
+          aplic_dtf: parseFloat(document.getElementById("aplic_dtf").value) || 0,
+          arte: parseFloat(document.getElementById("arte").value) || 0,
+          frete: parseFloat(document.getElementById("frete").value) || 0,
+          embalagem: parseFloat(document.getElementById("embalagem").value) || 0
+        };
+
+        custos.custo_total = Object.values(custos).reduce((a, b) => a + b, 0);
+
+        await addDoc(collection(db, "produtos"), {
+          nome,
+          codigo,
+          categoria,
+          fornecedor: document.getElementById("fornecedor").value,
+          imagem: document.getElementById("imagem").value,
+          descricao: document.getElementById("descricao").value,
+          whatsapp_mensagem: document.getElementById("whatsapp_mensagem").value,
+          custos
+        });
+
+        aviso.textContent = "Produto salvo com sucesso! Você será redirecionado em 3 segundos...";
+        aviso.className = "sucesso";
+        aviso.style.display = "block";
+
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 3000);
+      } catch (error) {
+        aviso.textContent = "Erro ao salvar o produto: " + error.message;
+        aviso.className = "erro";
+        aviso.style.display = "block";
+        form.querySelector('button[type="submit"]').disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

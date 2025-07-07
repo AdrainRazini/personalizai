@@ -1,0 +1,19 @@
+{
+  "name": "site_de-vendas",
+  "version": "1.0.0",
+  "description": "loja-digital/\r │\r ├── public/                     # Arquivos visíveis pelo navegador\r │   ├── index.html              # Estrutura principal do site\r │   ├── style.css               # Estilos globais\r │   ├── produtos.json           # Lista de produtos (simulando banco)\r │   └── assets/                 # Imagens, ícones, etc.\r │       └── produtos/\r │           ├── camisa-polo.jpg\r │           └── tenis-esportivo.jpg\r │\r ├── src/                        # Lógica JS modular\r │   ├── app.js                  # Entrada principal\r │   ├── render/\r │   │   └── renderProdutos.js   # Gera os cards dinamicamente\r │   ├── data/\r │   │   └── fetchProdutos.js    # Função para carregar produtos\r │   ├── utils/\r │   │   └── formatador.js       # Formata preço, cria links WhatsApp\r │   └── config.js               # Configuração (número do WhatsApp etc.)\r │\r ├── backend/                    # Opcional: servidor Node ou Firebase\r │   └── api.js                  # API para servir produtos (futuro)\r │\r ├── deploy/                     # Scripts de deploy (Netlify, Vercel, Firebase)\r │   ├── netlify.toml\r │   └── vercel.json\r │\r ├── .gitignore\r ├── README.md\r └── package.json                # Configuração do projeto",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "Adrian Razini Rangel",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "firebase": "^11.10.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  }
+}
