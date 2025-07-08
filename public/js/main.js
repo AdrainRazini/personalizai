@@ -1,4 +1,3 @@
-// js/main.js
 import { auth, db, provider } from "./firebase.js";
 import { signInWithPopup } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
@@ -14,12 +13,13 @@ export async function loginWithGoogle() {
     localStorage.setItem("useremail", user.email);
     localStorage.setItem("userphoto", user.photoURL);
 
-    await setDoc(doc(db, "users", user.email), {
+    // Atualiza ou cria documento do usuário na coleção 'clientes', sem apagar campos existentes
+    await setDoc(doc(db, "clientes", user.email), {
       name: user.displayName,
       email: user.email,
       photo: user.photoURL,
-      createdAt: new Date().toISOString()
-    });
+      lastLogin: new Date().toISOString()
+    }, { merge: true });
 
     window.location.href = "user-dashboard.html";
   } catch (error) {
