@@ -82,152 +82,150 @@
   <div id="aviso"></div>
 
   <a href="index.html">← Voltar</a>
+
 <script type="module" src="js/firebase.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-<script type="module">
-  import { auth, db } from "./js/firebase.js";
-  import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRrvG3NIL_SdUIRTslSOzKG-B9lmH8LaA",
+      authDomain: "personalizai-login-data.firebaseapp.com",
+      projectId: "personalizai-login-data",
+      storageBucket: "personalizai-login-data.appspot.com",
+      messagingSenderId: "1044986495943",
+      appId: "1:1044986495943:web:21db46ad8b5a8694700fe2",
+      measurementId: "G-FKL4MNFS4E"
+    };
 
-  const form = document.getElementById("produto-form");
-  const aviso = document.getElementById("aviso");
-  const camposCusto = ["custo_produto", "dtf", "aplic_dtf", "arte", "frete", "embalagem"];
-  const params = new URLSearchParams(location.search);
-  const id = params.get("id");
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-  function mostrarAviso(msg, tipo) {
-    aviso.textContent = msg;
-    aviso.className = tipo;
-    aviso.style.display = "block";
-  }
+    const aviso = document.getElementById("aviso");
+    const form = document.getElementById("produto-form");
 
-  function atualizarCustoTotal() {
-    let total = 0;
+    const camposCusto = [
+      "custo_produto",
+      "dtf",
+      "aplic_dtf",
+      "arte",
+      "frete",
+      "embalagem"
+    ];
+
+    function atualizarCustoTotal() {
+      let total = 0;
+      camposCusto.forEach(id => {
+        const valor = parseFloat(document.getElementById(id).value.replace(",", ".")) || 0;
+        total += valor;
+      });
+      document.getElementById("custo_total").value = total.toFixed(2).replace(".", ",");
+    }
+
     camposCusto.forEach(id => {
-      const valor = parseFloat(document.getElementById(id).value.replace(",", ".")) || 0;
-      total += valor;
+      document.getElementById(id).addEventListener("input", atualizarCustoTotal);
     });
-    document.getElementById("custo_total").value = total.toFixed(2).replace(".", ",");
-  }
 
-  camposCusto.forEach(id => {
-    document.getElementById(id).addEventListener("input", atualizarCustoTotal);
-  });
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
 
-  async function carregarProduto() {
-    if (!id) {
-      mostrarAviso("ID do produto não fornecido.", "erro");
-      form.querySelector('button[type="submit"]').disabled = true;
-      return;
+    function mostrarAviso(msg, tipo) {
+      aviso.textContent = msg;
+      aviso.className = tipo;
+      aviso.style.display = "block";
     }
-    try {
-      const ref = doc(db, "produtos", id);
-      const snap = await getDoc(ref);
-      if (snap.exists()) {
-        const p = snap.data();
-        document.getElementById("nome").value = p.nome || "";
-        document.getElementById("codigo").value = p.codigo || "";
-        document.getElementById("categoria").value = p.categoria || "";
-        document.getElementById("fornecedor").value = p.fornecedor || "";
-        document.getElementById("imagem").value = p.imagem || "";
-        document.getElementById("descricao").value = p.descricao || "";
-        document.getElementById("whatsapp_mensagem").value = p.whatsapp_mensagem || "";
 
-        const custos = p.custos || {};
-        document.getElementById("custo_produto").value = custos.custo_produto ?? "";
-        document.getElementById("dtf").value = custos.dtf ?? "";
-        document.getElementById("aplic_dtf").value = custos.aplic_dtf ?? "";
-        document.getElementById("arte").value = custos.arte ?? "";
-        document.getElementById("frete").value = custos.frete ?? "";
-        document.getElementById("embalagem").value = custos.embalagem ?? "";
-
-        atualizarCustoTotal();
-      } else {
-        mostrarAviso("Produto não encontrado.", "erro");
+    async function carregarProduto() {
+      if (!id) {
+        mostrarAviso("ID do produto não fornecido.", "erro");
         form.querySelector('button[type="submit"]').disabled = true;
-      }
-    } catch (error) {
-      mostrarAviso("Erro ao carregar produto: " + error.message, "erro");
-      form.querySelector('button[type="submit"]').disabled = true;
-    }
-  }
-
-  // ✅ Verificação de permissão de admin
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      alert("Você precisa estar logado para editar produtos.");
-      window.location.href = "login.html";
-      return;
-    }
-
-    try {
-      const userDoc = await getDoc(doc(db, "users", user.email));
-      const userData = userDoc.data();
-
-      if (!userDoc.exists() || userData?.role !== "admin") {
-        alert("Você não tem permissão para editar produtos.");
-        window.location.href = "index.html";
         return;
       }
+      try {
+        const ref = doc(db, "produtos", id);
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          const p = snap.data();
 
-      // ✅ Só chega aqui se for admin
-      carregarProduto();
+          document.getElementById("nome").value = p.nome || "";
+          document.getElementById("codigo").value = p.codigo || "";
+          document.getElementById("categoria").value = p.categoria || "";
+          document.getElementById("fornecedor").value = p.fornecedor || "";
+          document.getElementById("imagem").value = p.imagem || "";
+          document.getElementById("descricao").value = p.descricao || "";
+          document.getElementById("whatsapp_mensagem").value = p.whatsapp_mensagem || "";
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        form.querySelector('button[type="submit"]').disabled = true;
-        aviso.style.display = "none";
-        aviso.textContent = "";
-        aviso.className = "";
+          const custos = p.custos || {};
+          document.getElementById("custo_produto").value = custos.custo_produto ?? "";
+          document.getElementById("dtf").value = custos.dtf ?? "";
+          document.getElementById("aplic_dtf").value = custos.aplic_dtf ?? "";
+          document.getElementById("arte").value = custos.arte ?? "";
+          document.getElementById("frete").value = custos.frete ?? "";
+          document.getElementById("embalagem").value = custos.embalagem ?? "";
 
-        const nome = document.getElementById("nome").value.trim();
-        const codigo = document.getElementById("codigo").value.trim();
-        const categoria = document.getElementById("categoria").value.trim();
-        const fornecedor = document.getElementById("fornecedor").value.trim();
-        const imagem = document.getElementById("imagem").value.trim();
-        const descricao = document.getElementById("descricao").value.trim();
-        const whatsapp_mensagem = document.getElementById("whatsapp_mensagem").value.trim();
-
-        const custos = {
-          custo_produto: parseFloat(document.getElementById("custo_produto").value) || 0,
-          dtf: parseFloat(document.getElementById("dtf").value) || 0,
-          aplic_dtf: parseFloat(document.getElementById("aplic_dtf").value) || 0,
-          arte: parseFloat(document.getElementById("arte").value) || 0,
-          frete: parseFloat(document.getElementById("frete").value) || 0,
-          embalagem: parseFloat(document.getElementById("embalagem").value) || 0,
-        };
-
-        custos.custo_total = Object.values(custos).reduce((a, b) => a + b, 0);
-
-        try {
-          const ref = doc(db, "produtos", id);
-          await updateDoc(ref, {
-            nome,
-            codigo,
-            categoria,
-            fornecedor,
-            imagem,
-            descricao,
-            whatsapp_mensagem,
-            custos
-          });
-
-          mostrarAviso("Produto atualizado com sucesso! Redirecionando...", "sucesso");
-          setTimeout(() => window.location.href = "index.html", 3000);
-        } catch (error) {
-          mostrarAviso("Erro ao atualizar produto: " + error.message, "erro");
-          form.querySelector('button[type="submit"]').disabled = false;
+          atualizarCustoTotal();
+        } else {
+          mostrarAviso("Produto não encontrado.", "erro");
+          form.querySelector('button[type="submit"]').disabled = true;
         }
-      });
-
-    } catch (error) {
-      alert("Erro ao verificar permissões: " + error.message);
-      window.location.href = "index.html";
+      } catch (error) {
+        mostrarAviso("Erro ao carregar produto: " + error.message, "erro");
+        form.querySelector('button[type="submit"]').disabled = true;
+      }
     }
-  });
-</script>
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      form.querySelector('button[type="submit"]').disabled = true;
+      aviso.style.display = "none";
+      aviso.textContent = "";
+      aviso.className = "";
+
+      const nome = document.getElementById("nome").value.trim();
+      const codigo = document.getElementById("codigo").value.trim();
+      const categoria = document.getElementById("categoria").value.trim();
+      const fornecedor = document.getElementById("fornecedor").value.trim();
+      const imagem = document.getElementById("imagem").value.trim();
+      const descricao = document.getElementById("descricao").value.trim();
+      const whatsapp_mensagem = document.getElementById("whatsapp_mensagem").value.trim();
+
+      const custos = {
+        custo_produto: parseFloat(document.getElementById("custo_produto").value) || 0,
+        dtf: parseFloat(document.getElementById("dtf").value) || 0,
+        aplic_dtf: parseFloat(document.getElementById("aplic_dtf").value) || 0,
+        arte: parseFloat(document.getElementById("arte").value) || 0,
+        frete: parseFloat(document.getElementById("frete").value) || 0,
+        embalagem: parseFloat(document.getElementById("embalagem").value) || 0,
+      };
+
+      custos.custo_total = Object.values(custos).reduce((a, b) => a + b, 0);
+
+      try {
+        const ref = doc(db, "produtos", id);
+        await updateDoc(ref, {
+          nome,
+          codigo,
+          categoria,
+          fornecedor,
+          imagem,
+          descricao,
+          whatsapp_mensagem,
+          custos
+        });
+
+        mostrarAviso("Produto atualizado com sucesso! Redirecionando...", "sucesso");
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 3000);
+      } catch (error) {
+        mostrarAviso("Erro ao atualizar produto: " + error.message, "erro");
+        form.querySelector('button[type="submit"]').disabled = false;
+      }
+    });
+
+    carregarProduto();
+  </script>
 
 <script type="module" src="js/error.js"></script>
-
 </body>
 </html>
