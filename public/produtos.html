@@ -26,21 +26,20 @@
   </thead>
   <tbody id="produtos-tbody"></tbody>
 </table>
-<!--
-
--->
+<script type="module" src="js/firebase.js"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
   import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
+  // 🔐 Configuração correta do Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyBRrvG3NIL_SdUIRTslSOzKG-B9lmH8LaA",
-  authDomain: "personalizai-login-data.firebaseapp.com",
-  projectId: "personalizai-login-data",
-  storageBucket: "personalizai-login-data.firebasestorage.app",
-  messagingSenderId: "1044986495943",
-  appId: "1:1044986495943:web:21db46ad8b5a8694700fe2",
-  measurementId: "G-FKL4MNFS4E"
+    authDomain: "personalizai-login-data.firebaseapp.com",
+    projectId: "personalizai-login-data",
+    storageBucket: "personalizai-login-data.appspot.com", // corrigido aqui!
+    messagingSenderId: "1044986495943",
+    appId: "1:1044986495943:web:21db46ad8b5a8694700fe2",
+    measurementId: "G-FKL4MNFS4E"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -48,37 +47,52 @@
 
   const tbody = document.getElementById('produtos-tbody');
 
+  // 🔄 Função para carregar produtos na tabela
   async function carregarProdutos() {
-    tbody.innerHTML = "";
-    const querySnapshot = await getDocs(collection(db, "produtos"));
-    querySnapshot.forEach((docSnap) => {
-      const produto = docSnap.data();
-      const id = docSnap.id;
+    try {
+      tbody.innerHTML = "";
+      const querySnapshot = await getDocs(collection(db, "produtos"));
 
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${produto.nome}</td>
-        <td>${produto.codigo}</td>
-        <td>${produto.categoria}</td>
-        <td class="actions">
-           <a href="ver.html?id=${id}"><button>Ver</button></a>
-          <a href="editar.html?id=${id}"><button>Editar</button></a>
-          <button style="color:red;" onclick="deletarProduto('${id}')">Deletar</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
+      querySnapshot.forEach((docSnap) => {
+        const produto = docSnap.data();
+        const id = docSnap.id;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${produto.nome}</td>
+          <td>${produto.codigo}</td>
+          <td>${produto.categoria}</td>
+          <td class="actions">
+            <a href="ver.html?id=${id}"><button>Ver</button></a>
+            <a href="editar.html?id=${id}"><button>Editar</button></a>
+            <button style="color:red;" onclick="deletarProduto('${id}')">Deletar</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+    } catch (error) {
+      console.error("Erro ao carregar produtos:", error);
+    }
   }
 
+  // 🗑️ Função global para deletar produto
   window.deletarProduto = async function (id) {
     if (confirm("Deseja excluir este produto?")) {
-      await deleteDoc(doc(db, "produtos", id));
-      carregarProdutos();
+      try {
+        await deleteDoc(doc(db, "produtos", id));
+        await carregarProdutos();
+      } catch (error) {
+        console.error("Erro ao deletar produto:", error);
+        alert("Erro ao excluir. Verifique permissões ou console.");
+      }
     }
   };
 
+  // 🚀 Inicializa
   carregarProdutos();
 </script>
+
 <script type="module" src="js/error.js"></script>
 </body>
 </html>
