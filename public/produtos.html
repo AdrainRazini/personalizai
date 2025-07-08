@@ -3,141 +3,176 @@
 <head>
   <meta charset="UTF-8" />
   <title>Produtos</title>
-   <link rel="shortcut icon" href="img/favicon/personalizai.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="img/favicon/personalizai.ico" type="image/x-icon">
   <style>
     body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 1rem; }
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
     th, td { border: 1px solid #ccc; padding: 0.5rem; }
     .actions button { margin-right: 0.5rem; }
+    .filtros { margin-top: 1rem; display: flex; gap: 1rem; align-items: center; }
+    .filtros input, .filtros select { padding: 0.4rem; font-size: 1rem; }
   </style>
 </head>
 <body>
-<h1>Produtos Cadastrados</h1>
-<a href="adicionar.html"><button>Adicionar Novo Produto</button></a>
+  <h1>Produtos Cadastrados</h1>
+  <a href="adicionar.html"><button>Adicionar Novo Produto</button></a>
 
-<table>
-  <thead>
-    <tr>
-      <th>Nome</th>
-      <th>Código</th>
-      <th>Categoria</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody id="produtos-tbody"></tbody>
-</table>
-<script type="module" src="js/firebase.js"></script>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  import {
-    getFirestore,
-    collection,
-    getDocs,
-    deleteDoc,
-    doc,
-    getDoc
-  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-  import {
-    getAuth,
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  <div class="filtros">
+    <input type="text" id="busca" placeholder="🔍 Buscar por nome, código ou categoria..." />
+    <select id="filtro-categoria">
+      <option value="">Todas as categorias</option>
+    </select>
+  </div>
 
-  // Firebase config (corrigido)
-  const firebaseConfig = {
-    apiKey: "AIzaSyBRrvG3NIL_SdUIRTslSOzKG-B9lmH8LaA",
-    authDomain: "personalizai-login-data.firebaseapp.com",
-    projectId: "personalizai-login-data",
-    storageBucket: "personalizai-login-data.appspot.com",
-    messagingSenderId: "1044986495943",
-    appId: "1:1044986495943:web:21db46ad8b5a8694700fe2",
-    measurementId: "G-FKL4MNFS4E"
-  };
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Código</th>
+        <th>Categoria</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="produtos-tbody"></tbody>
+  </table>
 
-  // Inicialização
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import {
+      getFirestore, collection, getDocs, deleteDoc, doc, getDoc
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import {
+      getAuth, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
-  const tbody = document.getElementById('produtos-tbody');
-  let usuarioLogado = null;
-  let ehAdmin = false;
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRrvG3NIL_SdUIRTslSOzKG-B9lmH8LaA",
+      authDomain: "personalizai-login-data.firebaseapp.com",
+      projectId: "personalizai-login-data",
+      storageBucket: "personalizai-login-data.appspot.com",
+      messagingSenderId: "1044986495943",
+      appId: "1:1044986495943:web:21db46ad8b5a8694700fe2",
+      measurementId: "G-FKL4MNFS4E"
+    };
 
-  // Verifica autenticação e role
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      alert("Você precisa estar logado para visualizar produtos.");
-      window.location.href = "login.html";
-      return;
-    }
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    usuarioLogado = user;
+    const tbody = document.getElementById('produtos-tbody');
+    const inputBusca = document.getElementById('busca');
+    const filtroCategoria = document.getElementById('filtro-categoria');
 
-    try {
-      const userDocRef = doc(db, "users", user.email);
-      const userDocSnap = await getDoc(userDocRef);
+    let todosProdutos = [];
+    let ehAdmin = false;
 
-      if (userDocSnap.exists() && userDocSnap.data().role === "admin") {
-        ehAdmin = true;
-      } else {
-        ehAdmin = false;
-        alert("Atenção: você não tem permissão de administrador. Não poderá excluir produtos.");
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        alert("Você precisa estar logado para visualizar produtos.");
+        window.location.href = "login.html";
+        return;
       }
 
-      carregarProdutos();
-    } catch (error) {
-      console.error("Erro ao verificar permissões do usuário:", error);
-    }
-  });
-
-  // Carrega produtos e mostra tabela
-  async function carregarProdutos() {
-    try {
-      tbody.innerHTML = "";
-      const querySnapshot = await getDocs(collection(db, "produtos"));
-
-      querySnapshot.forEach((docSnap) => {
-        const produto = docSnap.data();
-        const id = docSnap.id;
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${produto.nome}</td>
-          <td>${produto.codigo}</td>
-          <td>${produto.categoria}</td>
-          <td class="actions">
-            <a href="ver.html?id=${id}"><button>Ver</button></a>
-            <a href="editar.html?id=${id}"><button>Editar</button></a>
-            ${ehAdmin ? `<button style="color:red;" onclick="deletarProduto('${id}')">Deletar</button>` : ''}
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-    } catch (error) {
-      console.error("Erro ao carregar produtos:", error);
-    }
-  }
-
-  // Deleta produto (só se for admin)
-  window.deletarProduto = async function (id) {
-    if (!ehAdmin) {
-      alert("Você não tem permissão para deletar este produto.");
-      return;
-    }
-
-    if (confirm("Deseja excluir este produto?")) {
       try {
-        await deleteDoc(doc(db, "produtos", id));
+        const userDocRef = doc(db, "users", user.email);
+        const userDocSnap = await getDoc(userDocRef);
+
+        ehAdmin = userDocSnap.exists() && userDocSnap.data().role === "admin";
+        if (!ehAdmin) {
+          alert("Atenção: você não tem permissão de administrador. Não poderá excluir produtos.");
+        }
+
         await carregarProdutos();
       } catch (error) {
-        console.error("Erro ao deletar produto:", error);
-        alert("Erro ao excluir. Verifique permissões ou o console.");
+        console.error("Erro ao verificar permissões do usuário:", error);
+      }
+    });
+
+    async function carregarProdutos() {
+      try {
+        tbody.innerHTML = "";
+        const querySnapshot = await getDocs(collection(db, "produtos"));
+        todosProdutos = [];
+
+        querySnapshot.forEach((docSnap) => {
+          const produto = docSnap.data();
+          produto.id = docSnap.id;
+          todosProdutos.push(produto);
+        });
+
+        atualizarCategorias();
+        renderizarTabela();
+
+      } catch (error) {
+        console.error("Erro ao carregar produtos:", error);
       }
     }
-  };
-</script>
 
+    function atualizarCategorias() {
+      const categorias = [...new Set(todosProdutos.map(p => p.categoria).filter(Boolean))];
+      filtroCategoria.innerHTML = `<option value="">Todas as categorias</option>`;
+      categorias.forEach(categoria => {
+        const opt = document.createElement("option");
+        opt.value = categoria;
+        opt.textContent = categoria;
+        filtroCategoria.appendChild(opt);
+      });
+    }
 
-<script type="module" src="js/error.js"></script>
+    function renderizarTabela() {
+      const termo = inputBusca.value.toLowerCase();
+      const filtro = filtroCategoria.value;
+
+      tbody.innerHTML = "";
+
+      todosProdutos
+        .filter(p => (
+          (!filtro || p.categoria === filtro) &&
+          (
+            p.nome.toLowerCase().includes(termo) ||
+            p.codigo.toLowerCase().includes(termo) ||
+            p.categoria.toLowerCase().includes(termo)
+          )
+        ))
+        .forEach((produto) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${produto.nome}</td>
+            <td>${produto.codigo}</td>
+            <td>${produto.categoria}</td>
+            <td class="actions">
+              <a href="ver.html?id=${produto.id}"><button>Ver</button></a>
+              ${ehAdmin ? `<a href="editar.html?id=${produto.id}"><button>Editar</button></a>` : ''}
+              ${ehAdmin ? `<button style="color:red;" onclick="deletarProduto('${produto.id}')">Deletar</button>` : ''}
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+    }
+
+    // Evento para deletar
+    window.deletarProduto = async function (id) {
+      if (!ehAdmin) {
+        alert("Você não tem permissão para deletar este produto.");
+        return;
+      }
+
+      if (confirm("Deseja excluir este produto?")) {
+        try {
+          await deleteDoc(doc(db, "produtos", id));
+          await carregarProdutos();
+        } catch (error) {
+          console.error("Erro ao deletar produto:", error);
+          alert("Erro ao excluir. Verifique permissões ou o console.");
+        }
+      }
+    };
+
+    // Eventos de filtro e busca
+    inputBusca.addEventListener("input", renderizarTabela);
+    filtroCategoria.addEventListener("change", renderizarTabela);
+  </script>
+
+  <script type="module" src="js/error.js"></script>
 </body>
 </html>
