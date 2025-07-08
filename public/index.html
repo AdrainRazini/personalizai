@@ -35,6 +35,8 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBRrvG3NIL_SdUIRTslSOzKG-B9lmH8LaA",
@@ -48,6 +50,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
     const grid = document.getElementById("produtos-grid");
     const inputPesquisa = document.getElementById("pesquisa");
     const selectCategoria = document.getElementById("filtroCategoria");
@@ -129,7 +132,7 @@
 
 
 
-    const auth = getAuth(app);
+
     
   onAuthStateChanged(auth, async (user) => {
     if (!user) return;
