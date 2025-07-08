@@ -1,3 +1,4 @@
+// js/main.js
 import { auth, db, provider } from "./firebase.js";
 import { signInWithPopup } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
@@ -13,17 +14,17 @@ export async function loginWithGoogle() {
     localStorage.setItem("useremail", user.email);
     localStorage.setItem("userphoto", user.photoURL);
 
-    // Atualiza ou cria documento do usuário na coleção 'clientes', sem apagar campos existentes
-    await setDoc(doc(db, "clientes", user.email), {
+    // ⚠️ Agora salva os dados em 'users', mantendo campos como role (se já existir)
+    await setDoc(doc(db, "users", user.email), {
       name: user.displayName,
       email: user.email,
       photo: user.photoURL,
       lastLogin: new Date().toISOString()
-    }, { merge: true });
+    }, { merge: true }); // <- evita apagar o campo role
 
     window.location.href = "user-dashboard.html";
   } catch (error) {
-    console.error("Erro ao fazer login:", error);
-    alert("Erro ao fazer login com o Google.");
+    console.error("Erro ao fazer login:", error?.message || error);
+    alert("Erro ao fazer login com o Google: " + (error?.message || error));
   }
 }
