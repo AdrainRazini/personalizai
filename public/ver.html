@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loja • Detalhes do Produto</title>
+   <link rel="shortcut icon" href="img/favicon/personalizai.ico" type="image/x-icon">
+  <style>
+    :root {
+      --primaria: #f94a3d;
+      --texto: #333;
+      --cinza: #777;
+      --borda: #ddd;
+      --fundo: #f9f9f9;
+      --verde-wpp: #25D366;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--fundo);
+      margin: 0;
+      padding: 2rem 1rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      background: white;
+      max-width: 700px;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      padding: 2rem;
+    }
+
+    .produto-img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #fafafa;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      color: var(--texto);
+    }
+
+    .info {
+      margin-bottom: 1rem;
+    }
+
+    .info p {
+      margin: 0.3rem 0;
+      color: var(--cinza);
+      font-size: 0.95rem;
+    }
+
+    .descricao {
+      margin: 1.5rem 0;
+      font-size: 1rem;
+      color: var(--texto);
+    }
+
+    .preco {
+      font-size: 1.4rem;
+      color: var(--primaria);
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+    }
+
+    .whatsapp {
+      display: inline-block;
+      background-color: var(--verde-wpp);
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      transition: background-color 0.2s;
+    }
+
+    .whatsapp:hover {
+      background-color: #1ebe5b;
+    }
+
+    .voltar {
+      display: block;
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .voltar button {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid var(--borda);
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--texto);
+    }
+
+    .voltar button:hover {
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="produto">Carregando produto...</div>
+<!-- 
+  
+
+
+-->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRrvG3NIL_SdUIRTslSOzKG-B9lmH8LaA",
+      authDomain: "personalizai-login-data.firebaseapp.com",
+      projectId: "personalizai-login-data",
+      storageBucket: "personalizai-login-data.appspot.com",
+      messagingSenderId: "1044986495943",
+      appId: "1:1044986495943:web:21db46ad8b5a8694700fe2",
+      measurementId: "G-FKL4MNFS4E"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const produtoDiv = document.getElementById("produto");
+
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    if (!id) {
+      produtoDiv.innerHTML = "<p>ID do produto não fornecido.</p>";
+    } else {
+      carregarProduto(id);
+    }
+
+    function formatar(valor) {
+      const num = parseFloat(valor);
+      return isNaN(num) ? "0,00" : num.toFixed(2).replace(".", ",");
+    }
+
+    async function carregarProduto(id) {
+      try {
+        const docRef = doc(db, "produtos", id);
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+          produtoDiv.innerHTML = "<p>Produto não encontrado.</p>";
+          return;
+        }
+
+        const p = docSnap.data();
+        const {
+          nome, codigo, categoria, fornecedor, imagem, descricao, whatsapp_mensagem,
+          custos = {}
+        } = p;
+
+        const total =
+          (parseFloat(custos.custo_produto) || 0) +
+          (parseFloat(custos.dtf) || 0) +
+          (parseFloat(custos.aplic_dtf) || 0) +
+          (parseFloat(custos.arte) || 0) +
+          (parseFloat(custos.frete) || 0) +
+          (parseFloat(custos.embalagem) || 0);
+
+        const numeroWhatsApp = "5599999999999"; // Substitua aqui
+        const mensagem =  `Olá! Tenho interesse no produto "${nome}" (Código: ${codigo}). Pode me dar mais informações?`;
+        const linkWhatsapp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`;
+        const imgHtml = imagem ? `<img src="img/${imagem}" alt="${nome}" class="produto-img">` : "";
+
+        produtoDiv.innerHTML = `
+          ${imgHtml}
+          <h1>${nome}</h1>
+          <div class="info">
+            <p><strong>Código:</strong> ${codigo}</p>
+            <p><strong>Categoria:</strong> ${categoria}</p>
+            <p><strong>Fornecedor:</strong> ${fornecedor || "Não informado"}</p>
+          </div>
+          <div class="descricao">${descricao || "Sem descrição"}</div>
+          <div class="preco">Custo total: R$ ${formatar(total)}</div>
+          <a href="${linkWhatsapp}" target="_blank" class="whatsapp">💬 Falar no WhatsApp</a>
+          <div class="voltar"><a href="index.html"><button>← Voltar</button></a></div>
+        `;
+      } catch (error) {
+        produtoDiv.innerHTML = "<p>Erro ao carregar produto.</p>";
+        console.error(error);
+      }
+    }
+  </script>
+
+</body>
+</html>
