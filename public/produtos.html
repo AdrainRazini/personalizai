@@ -29,25 +29,67 @@
 <script type="module" src="js/firebase.js"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs,
+    deleteDoc,
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+  import {
+    getAuth,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
-  // 🔐 Configuração correta do Firebase
+  // Firebase config (corrigido)
   const firebaseConfig = {
     apiKey: "AIzaSyBRrvG3NIL_SdUIRTslSOzKG-B9lmH8LaA",
     authDomain: "personalizai-login-data.firebaseapp.com",
     projectId: "personalizai-login-data",
-    storageBucket: "personalizai-login-data.appspot.com", // corrigido aqui!
+    storageBucket: "personalizai-login-data.appspot.com",
     messagingSenderId: "1044986495943",
     appId: "1:1044986495943:web:21db46ad8b5a8694700fe2",
     measurementId: "G-FKL4MNFS4E"
   };
 
+  // Inicialização
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth(app);
 
   const tbody = document.getElementById('produtos-tbody');
+  let usuarioLogado = null;
+  let ehAdmin = false;
 
-  // 🔄 Função para carregar produtos na tabela
+  // Verifica autenticação e role
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      alert("Você precisa estar logado para visualizar produtos.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    usuarioLogado = user;
+
+    try {
+      const userDocRef = doc(db, "users", user.email);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists() && userDocSnap.data().role === "admin") {
+        ehAdmin = true;
+      } else {
+        ehAdmin = false;
+        alert("Atenção: você não tem permissão de administrador. Não poderá excluir produtos.");
+      }
+
+      carregarProdutos();
+    } catch (error) {
+      console.error("Erro ao verificar permissões do usuário:", error);
+    }
+  });
+
+  // Carrega produtos e mostra tabela
   async function carregarProdutos() {
     try {
       tbody.innerHTML = "";
@@ -65,7 +107,7 @@
           <td class="actions">
             <a href="ver.html?id=${id}"><button>Ver</button></a>
             <a href="editar.html?id=${id}"><button>Editar</button></a>
-            <button style="color:red;" onclick="deletarProduto('${id}')">Deletar</button>
+            ${ehAdmin ? `<button style="color:red;" onclick="deletarProduto('${id}')">Deletar</button>` : ''}
           </td>
         `;
         tbody.appendChild(tr);
@@ -76,22 +118,25 @@
     }
   }
 
-  // 🗑️ Função global para deletar produto
+  // Deleta produto (só se for admin)
   window.deletarProduto = async function (id) {
+    if (!ehAdmin) {
+      alert("Você não tem permissão para deletar este produto.");
+      return;
+    }
+
     if (confirm("Deseja excluir este produto?")) {
       try {
         await deleteDoc(doc(db, "produtos", id));
         await carregarProdutos();
       } catch (error) {
         console.error("Erro ao deletar produto:", error);
-        alert("Erro ao excluir. Verifique permissões ou console.");
+        alert("Erro ao excluir. Verifique permissões ou o console.");
       }
     }
   };
-
-  // 🚀 Inicializa
-  carregarProdutos();
 </script>
+
 
 <script type="module" src="js/error.js"></script>
 </body>
