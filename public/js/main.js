@@ -1,4 +1,3 @@
-// js/main.js
 import { auth, db, provider } from "./firebase.js";
 import { signInWithPopup } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
@@ -14,13 +13,13 @@ export async function loginWithGoogle() {
     localStorage.setItem("useremail", user.email);
     localStorage.setItem("userphoto", user.photoURL);
 
-    // ⚠️ Agora salva os dados em 'users', mantendo campos como role (se já existir)
-    await setDoc(doc(db, "users", user.email), {
+    // Agora salva o documento com ID igual ao UID
+    await setDoc(doc(db, "users", user.uid), {
       name: user.displayName,
       email: user.email,
       photo: user.photoURL,
       lastLogin: new Date().toISOString()
-    }, { merge: true }); // <- evita apagar o campo role
+    }, { merge: true }); // <-- mantém o campo role se já existir
 
     window.location.href = "user-dashboard.html";
   } catch (error) {
