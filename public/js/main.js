@@ -1,7 +1,7 @@
 // js/main.js
 import { auth, db, provider } from "./firebase.js";
-import { signInWithPopup } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { signInWithPopup } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 
 auth.languageCode = 'pt-BR';
 
