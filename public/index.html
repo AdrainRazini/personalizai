@@ -4,7 +4,14 @@
   <meta charset="UTF-8" />
   <title>Personalizai</title>
   <link rel="stylesheet" href="css/style.css">
-    <link rel="shortcut icon" href="img/favicon/personalizai.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="img/favicon/personalizai.ico" type="image/x-icon">
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
 </head>
 <body>
 
@@ -19,7 +26,7 @@
     </nav>
   </header>
 
-  <h1>🛒 Produtos em Destaque</h1>
+  <h1>Produtos em Destaque</h1>
 
   <div style="max-width: 1000px; margin: auto; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem;">
     <input type="text" id="pesquisa" placeholder="🔍 Buscar por nome ou código..." style="padding: 0.5rem; width: 250px; border-radius: 6px; border: 1px solid #ccc;">
@@ -127,6 +134,7 @@
 
     carregarProdutos();
   </script>
+  
   <script type="module">
  import { auth, db } from './js/firebase.js';
   import {
@@ -155,8 +163,8 @@
         adminLinks.innerHTML = `
           <hr style="margin-bottom: 1rem;">
           <p><strong>Área do Administrador</strong></p>
-          <a href="produtos.html"><button style="margin: 0.5rem;">📦 Gerenciar Produtos</button></a>
-          <a href="adicionar.html"><button style="margin: 0.5rem;">➕ Novo Produto</button></a>
+          <a href="produtos.html"><button style="margin: 0.5rem;">Gerenciar Produtos</button></a>
+          <a href="adicionar.html"><button style="margin: 0.5rem;">Novo Produto</button></a>
         `;
 
         document.body.appendChild(adminLinks);
