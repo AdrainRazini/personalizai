@@ -1,43 +1,140 @@
-/* public/style.css */
-/* ======= Estilos Globais ======= */
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
+/* ======= Variáveis Globais ======= */
+:root {
+  /* Cores principais */
+  --color-primary: #25D366;
+  --color-primary-hover: #1eb14f;
+  --color-accent: #128C7E;
+
+  /* Cores neutras */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray: #f4f4f4;
+  --color-border: #ddd;
+  --color-danger: red;
+  --color-danger-hover: darkred;
+
+  /* Tipografia */
+  --font-family: Arial, sans-serif;
+
+  /* Layout e sombra */
+  --radius: 10px;
+  --padding: 30px;
+  --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ======= Tema Escuro Automático ======= */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-gray: #121212;
+    --color-white: #1e1e1e;
+    --color-black: #f4f4f4;
+    --color-border: #444;
   }
-  
-  /* ======= Contêiner Geral ======= */
+
+  body {
+    background: var(--color-gray);
+    color: var(--color-black);
+  }
+
   .container {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 300px;
+    background: var(--color-white);
   }
-  
-  /* ======= Cabeçalhos ======= */
-  h2 {
-    margin-bottom: 20px;
-    color: #128C7E;
+
+  input,
+  select,
+  textarea {
+    background: #222;
+    color: #eee;
+    border: 2px solid var(--color-border);
   }
-  
-  /* ======= Campos de Entrada ======= */
-  input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--color-primary);
   }
-  
-  /* ======= Estilos da Página de Login e Chat ======= */
-  #login-page {
-    text-align: center;
-  }
-  
+}
+
+/* ======= Estilo Global ======= */
+body {
+  font-family: var(--font-family);
+  background: var(--color-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* ======= Contêiner Central ======= */
+.container {
+  background: var(--color-white);
+  padding: var(--padding);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+  width: 90%;
+  max-width: 300px;
+  transition: all 0.3s ease;
+}
+
+/* ======= Cabeçalhos ======= */
+h2 {
+  margin-bottom: 20px;
+  color: var(--color-accent);
+}
+
+/* ======= Campos de Entrada ======= */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 2px solid var(--color-border);
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-accent);
+  outline: none;
+}
+
+/* ======= Estilo da Página de Login ======= */
+#login-page {
+  text-align: center;
+}
+
+/* ======= Botões ======= */
+button {
+  width: 100%;
+  padding: 10px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background: var(--color-primary-hover);
+}
+
+/* ======= Botão de Voltar (vermelho) ======= */
+.back-btn {
+  background-color: var(--color-danger);
+}
+.back-btn:hover {
+  background-color: var(--color-danger-hover);
+}
+
+/* ======= Ícone do botão Google login (se usado) ======= */
+#google-login i {
+  margin-right: 8px;
+}

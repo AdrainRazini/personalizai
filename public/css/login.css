@@ -1,0 +1,98 @@
+:root {
+  /** Cores principais **/
+  --color-primary: #25D366;
+  --color-primary-hover: #1ebe5d;
+  --color-accent: #128C7E;
+
+  /** Cores neutras **/
+  --color-white: #ffffff;
+  --color-dark: #333;
+  --color-border: #ddd;
+  --color-danger: red;
+  --color-danger-hover: darkred;
+
+  /** Tipografia **/
+  --font-family: 'Segoe UI', sans-serif;
+
+  /** Layout **/
+  --radius: 10px;
+  --padding: 30px;
+  --max-width: 300px;
+  --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-family);
+}
+
+body {
+  background: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* Container de login */
+#login-page {
+  background: var(--color-white);
+  padding: var(--padding);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+  width: 90%;
+  max-width: var(--max-width);
+}
+
+/* Título */
+h2 {
+  margin-bottom: 20px;
+  color: var(--color-accent);
+}
+
+/* Inputs e Botões */
+input, button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: 0.3s ease;
+}
+
+/* Campo de entrada */
+input {
+  border: 2px solid var(--color-border);
+}
+input:focus {
+  border-color: var(--color-accent);
+  outline: none;
+}
+
+/* Botão padrão */
+button {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  cursor: pointer;
+}
+button:hover {
+  background: var(--color-primary-hover);
+}
+
+/* Botão Voltar */
+.back-btn {
+  background-color: var(--color-danger);
+}
+.back-btn:hover {
+  background-color: var(--color-danger-hover);
+}
+
+/* Ícone Google */
+#google-login i {
+  margin-right: 8px;
+}

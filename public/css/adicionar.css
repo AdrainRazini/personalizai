@@ -1,0 +1,98 @@
+
+    :root {
+      --green: #28a745;
+      --green-hover: #218838;
+      --danger: #dc3545;
+      --white: #ffffff;
+      --gray: #f8f9fa;
+      --text: #212529;
+      --border-radius: 5px;
+      --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      --font: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      max-width: 600px;
+      margin: auto;
+      padding: 1rem;
+      background: var(--gray);
+      color: var(--text);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    form {
+      background: var(--white);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+
+    input, textarea {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: var(--border-radius);
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+
+    button:disabled {
+      background-color: #999;
+      cursor: not-allowed;
+    }
+
+    button:hover:enabled {
+      background-color: var(--green-hover);
+    }
+
+    #aviso {
+      margin-top: 1rem;
+      padding: 12px;
+      border-radius: var(--border-radius);
+      display: none;
+    }
+
+    #aviso.sucesso {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    #aviso.erro {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 1rem;
+      text-decoration: none;
+      color: var(--danger);
+      font-weight: bold;
+    }
+
+    strong {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+    }
